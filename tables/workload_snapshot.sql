@@ -10,8 +10,8 @@ create table workload_snapshot
 snap_id int unsigned auto_increment not null comment 'snapshot id',
 begin_snap_time datetime not null default current_timestamp() comment 'snap start time',
 end_snap_time datetime comment 'snap end time',
-state varchar(10) not null comment 'RUNNING,COMPLETED,ABORTED',
-err_msg varchar(256) comment 'error messages are recorded only when there is an exception.',
+state varchar(10) not null comment 'RUNNING,COMPLETED,ERRORED',
+err_msg varchar(1024) comment 'error messages are recorded only when there is an exception.',
 primary key (snap_id),
 index ix_begin_snap_time (begin_snap_time)
 )
