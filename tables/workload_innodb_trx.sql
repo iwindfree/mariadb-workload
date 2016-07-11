@@ -3,9 +3,9 @@
 # Date  : 2016.07.08
 # Desc  : InnoDB Transaction Snapshot
 #
-drop table if exists sys.workload_innodb_trx;
+drop table if exists workload_innodb_trx;
 
-create table sys.workload_innodb_trx
+create table workload_innodb_trx
 (
 snap_id int unsigned not null comment 'snapshot id',
 thread_id                  bigint   unsigned not null comment 'MySQL thread ID. Can be used for joining with PROCESSLIST on ID',
