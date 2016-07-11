@@ -3,9 +3,9 @@
 # Date  : 2016.07.08
 # Desc  : Innodb Lock Snapshot
 #
-drop table if exists sys.workload_innodb_locks;
+drop table if exists workload_innodb_locks;
 
-create table sys.workload_innodb_locks
+create table workload_innodb_locks
 (
 snap_id int unsigned not null comment 'snapshot id',
 lock_id     varchar(81)         not null comment 'Unique lock ID number, internal to InnoDB. Treat it as an opaque string. Although LOCK_ID currently contains TRX_ID, the format of the data in LOCK_ID is not guaranteed to remain the same in future releases. Do not write programs that parse the LOCK_ID value.',
