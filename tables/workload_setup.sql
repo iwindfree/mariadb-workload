@@ -15,3 +15,5 @@ charset = 'utf8'
 collate = 'utf8_general_ci'
 comment = 'DB workload - setting for snapshot'
 ;
+
+insert into workload_setup (expire_snapshot_days) values (7);
