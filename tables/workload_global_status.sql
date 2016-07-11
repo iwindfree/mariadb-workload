@@ -3,9 +3,9 @@
 # Date  : 2016.07.08
 # Desc  : Global Status Snapshot
 #
-drop table if exists sys.workload_global_status;
+drop table if exists workload_global_status;
 
-create table sys.workload_global_status
+create table workload_global_status
 (
 snap_id int unsigned not null comment 'snapshot id',
 variable_name varchar(64) not null,
