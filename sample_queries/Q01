@@ -1,0 +1,36 @@
+# Author : YJ
+# Date   : 2016.07.12
+# query_id: Q01
+# descript: 일정 기간동안 실행된 쿼리별 실행횟수, 총소요시간, 평균소요시간 조회
+
+SET @from_dt='20160712 0800';
+SET @to_dt='20160712 1100';
+
+SELECT s_q.from_dt
+      ,s_q.to_dt
+      ,s_q.schema_name
+      ,s_q.digest
+      ,t.digest_text AS sql_text
+      ,s_q.executed_count
+      ,s_q.elapsed_seconds
+      ,s_q.avg_elapsed_seconds
+  FROM (SELECT schema_name
+              ,digest
+              ,MIN(begin_snap_time) AS from_dt
+              ,MAX(end_snap_time) AS to_dt
+              ,SUM(delta_count_star) AS executed_count
+              ,SUM(delta_timer_wait) AS elapsed_seconds
+              ,round(SUM(delta_timer_wait) / SUM(delta_count_star), 3) AS avg_elapsed_seconds
+          FROM sys.workload_sql_summary q
+          JOIN sys.workload_snapshot s
+            ON q.snap_id = s.snap_id
+         WHERE s.begin_snap_time >= str_to_date(@from_dt, '%Y%m%d %H%i')
+           AND s.begin_snap_time <= str_to_date(@to_dt, '%Y%m%d %H%i')
+         GROUP BY q.schema_name, q.digest
+        HAVING SUM(q.delta_count_star) > 0 AND SUM(q.delta_timer_wait) > 0
+		 ) s_q
+  JOIN sys.workload_sql_text t
+    ON s_q.schema_name = t.schema_name
+   AND s_q.digest = t.digest
+ WHERE s_q.schema_name <> 'sys'
+;
