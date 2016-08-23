@@ -1,10 +1,13 @@
 #
+# Name: workload_sql_summary
 # Author: YJ
-# Date  : 2016.07.11
-# Desc  : "digest sql text" statistics summary
-# performance_schema.setup_consumers 테이블의 "statements_digest" 항목의 enabled 설정이 "YES"로 돼 있어야 함
-# performance_schema.events_statements_summary_by_digest 테이블의 timer 관련 항목은 picoseconds 단위임
-# 이 테이블에는 seconds 단위로 저장함
+# Created : 2016.07.11
+# Last Updated: 2016.08.22
+# Desc: "digest sql text" statistics summary
+# You should set "performance_schema" to "ON"
+# You should set the "statements_digest" to "enabled" in performance_schema.setup_consumers table.
+# Although the column "timer"  of performance_schema.events_statements_summary_by_digest 
+# is recorded in micro seconds, this table is recorded in seconds.
 #
 drop table if exists workload_sql_summary;
 
