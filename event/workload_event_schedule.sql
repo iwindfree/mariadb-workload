@@ -1,7 +1,9 @@
 #
+# Name: workload_event_schedule
 # Author: YJ
-# Date  : 2016.07.11
-# Desc  : event to execute gathering db workloads
+# Created : 2016.07.11
+# Last Updated: 2016.08.23
+# Desc: event for workload snapshot
 #
 DROP EVENT IF EXISTS workload_event_schedule;
 
