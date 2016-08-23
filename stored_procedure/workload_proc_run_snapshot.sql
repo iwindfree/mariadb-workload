@@ -3,7 +3,7 @@
 # Author: YJ
 # Created : 2016.07.11
 # Last Updated: 2016.08.22
-# Desc: write workloads snapshot
+# Desc: record workloads snapshot
 #
 # MariaDB [sys]> call workload_proc_run_snapshot();
 #
