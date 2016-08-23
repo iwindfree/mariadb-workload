@@ -8,7 +8,7 @@
 # MariaDB [sys]> call workload_proc_run_snapshot();
 #
 DROP PROCEDURE IF EXISTS workload_proc_run_snapshot;
-
+ 
 delimiter ;;
 CREATE
 DEFINER = `root`@`localhost`
