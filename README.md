@@ -1,6 +1,6 @@
 # The MariaDB Workload
 
-## Remark
+## Comment
 
 "The MariaDB workload" is gathering workload in MariaDB.
 
