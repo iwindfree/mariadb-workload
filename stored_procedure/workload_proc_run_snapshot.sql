@@ -1,7 +1,11 @@
 #
+# Name: workload_proc_run_snapshot
 # Author: YJ
-# Date  : 2016.07.11
-# Desc  : procedure that write workload snapshot
+# Created : 2016.07.11
+# Last Updated: 2016.08.22
+# Desc: write workloads snapshot
+#
+# MariaDB [sys]> call workload_proc_run_snapshot();
 #
 DROP PROCEDURE IF EXISTS workload_proc_run_snapshot;
 
@@ -41,6 +45,9 @@ Main: BEGIN
      WHERE snap_id = _snap_id;
   END;
 
+  # do not binary logging in this thread
+  SET SESSION sql_log_bin=OFF;
+
   # if there is no user defined lock, keep going. if else do nothing.
   IF IS_FREE_LOCK(_user_lock_name) THEN
 
@@ -76,7 +83,7 @@ Main: BEGIN
       ;
 
       # log the Metadata locks
-      INSERT INTO workload_meta_locks
+      INSERT IGNORE INTO workload_meta_locks
       (
          snap_id
         ,thread_id
@@ -392,6 +399,9 @@ Main: BEGIN
      SET end_snap_time = NOW()
         ,state = 'COMPLETED'
    WHERE snap_id = _snap_id;
+
+  # do binary logging in this thread
+  SET SESSION sql_log_bin=ON;
 
 END Main;;
 delimiter ;
