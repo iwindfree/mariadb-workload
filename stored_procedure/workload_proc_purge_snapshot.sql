@@ -1,7 +1,11 @@
 #
+# Name: workload_proc_purge_snapshot
 # Author: YJ
-# Date  : 2016.07.11
-# Desc  : procedure that purge workload
+# Created : 2016.07.11
+# Last Updated: 2016.08.22
+# Desc: Purge workloads and mysql.slow_log table
+#
+# MariaDB [sys]> call workload_proc_purge_snapshot();
 #
 DROP PROCEDURE IF EXISTS workload_proc_purge_snapshot;
 
@@ -37,6 +41,9 @@ Main: BEGIN
     SHOW ERRORS;
   END;
 
+  # do not binary logging in this thread
+  SET SESSION sql_log_bin=OFF;
+
   # if there is no user defined lock, keep going. if else do nothing.
   IF IS_FREE_LOCK(_user_lock_name) THEN
 
@@ -62,7 +69,15 @@ Main: BEGIN
       SELECT MAX(snap_id)
         INTO _snap_id
         FROM workload_snapshot
-       WHERE begin_snap_time <= DATE_SUB(NOW(), INTERVAL _expire_snapshot_days DAY);
+       WHERE begin_snap_time <= DATE_SUB(current_timestamp(), INTERVAL _expire_snapshot_days DAY);
+
+      # delete mysql.slow_log
+      SET GLOBAL slow_query_log=OFF;
+      RENAME TABLE mysql.slow_log TO mysql.workload_temp_slow_log;
+      DELETE FROM mysql.workload_temp_slow_log
+       WHERE start_time < DATE_SUB(current_timestamp(), INTERVAL _expire_snapshot_days+1 DAY);
+      RENAME TABLE mysql.workload_temp_slow_log TO mysql.slow_log;
+      SET GLOBAL slow_query_log=ON;
 
       # delete the snapshot history
       DELETE FROM workload_snapshot
@@ -105,6 +120,9 @@ Main: BEGIN
 
   # release user defined lock
   DO RELEASE_LOCK(_user_lock_name);
+
+  # do binary logging in this thread
+  SET SESSION sql_log_bin=ON;
 
 END Main;;
 delimiter ;
